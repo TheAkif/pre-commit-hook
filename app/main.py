@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
-from starlette.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
+from starlette.middleware.cors import CORSMiddleware
 
 from app.api import api_router
 from app.core.config import settings
@@ -14,9 +14,10 @@ app = FastAPI(
     openapi_url=f"{settings.API_STR}{settings.API_V1_STR}/openapi.json",
 )
 
-@app.get("/", response_class=HTMLResponse, tags=['Home'] )
+
+@app.get("/", response_class=HTMLResponse, tags=["Home"])
 async def get_landing_page():
-    html_content ="""
+    html_content = """
     <!DOCTYPE html>
     <html>
     <head>

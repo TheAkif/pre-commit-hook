@@ -3,7 +3,6 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 
-
 from app.api import api_router
 from app.core.config import settings
 from app.pre_start import init

@@ -31,6 +31,8 @@ jose = "*"
 fastapi-filter = "*"
 
 [dev-packages]
+debugpy = "*"
+jupyterlab = "*"
 
 [requires]
 python_version = "3.10"

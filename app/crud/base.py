@@ -38,7 +38,15 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return db.execute(select(self.model)).scalars().all()
 
     def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:  # noqa
-        obj_in_data = jsonable_encoder(obj_in)
+        # Drop unset (None) fields rather than passing them through explicitly:
+        # SQLAlchemy column defaults only apply when an attribute is never set,
+        # so explicitly assigning None here would bypass them and could violate
+        # a NOT NULL constraint on columns that rely on a Python-side default.
+        obj_in_data = {
+            key: value
+            for key, value in jsonable_encoder(obj_in).items()
+            if value is not None
+        }
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)
         db.commit()

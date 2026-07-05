@@ -10,6 +10,7 @@ class ItemBase(BaseModel):
 # Properties to receive via API on creation
 class ItemCreate(ItemBase):
     title: str
+    description: str
     owner_id: int = (
         1  # we set this to one as we are having one superuser for this at this point.
     )

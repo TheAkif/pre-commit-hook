@@ -19,7 +19,14 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         return db.scalar(select(User).where(User.email == email))
 
     def create(self, db: Session, obj_in: UserCreate | UserAdminCreate) -> User:
-        data = jsonable_encoder(obj_in)
+        # See CRUDBase.create for why None fields are dropped rather than
+        # passed through explicitly (they'd bypass the column's default and
+        # can violate a NOT NULL constraint, e.g. User.full_name).
+        data = {
+            key: value
+            for key, value in jsonable_encoder(obj_in).items()
+            if value is not None
+        }
         data["hashed_password"] = get_password_hash(obj_in.password)
         del data["password"]
         db_obj = User(**data)
